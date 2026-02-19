@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -39,7 +39,6 @@ td.team { text-align: left; }
 .team-RTI { background: #6e1a1a; color: #ff8a6a; border: 1px solid #9e2a2a; }
 .team-SLK { background: #5a4a00; color: #ffd700; border: 1px solid #8a7000; }
 .table-wrap { overflow-x: auto; }
-.pos { color: #888; font-size: 0.85em; }
 </style>
 </head>
 <body>
@@ -66,13 +65,6 @@ td.team { text-align: left; }
 <option value="Ride the Icing">Ride the Icing</option>
 <option value="Slackers">Slackers</option>
 </select>
-<label for="posFilter">Position:</label>
-<select id="posFilter">
-<option value="ALL">All Positions</option>
-<option value="F">Forward</option>
-<option value="D">Defense</option>
-<option value="G">Goalie</option>
-</select>
 <span class="stat-count" id="statCount"></span>
 </div>
 <div class="table-wrap">
@@ -81,28 +73,140 @@ td.team { text-align: left; }
 <th data-col="rank">Rank <span class="sort-arrow"></span></th>
 <th data-col="name" style="text-align:left">Player <span class="sort-arrow"></span></th>
 <th data-col="team" style="text-align:left">Team <span class="sort-arrow"></span></th>
-<th data-col="pos">Pos <span class="sort-arrow"></span></th>
 <th data-col="gp">GP <span class="sort-arrow"></span></th>
 <th data-col="g">G <span class="sort-arrow"></span></th>
 <th data-col="a">A <span class="sort-arrow"></span></th>
 <th data-col="pts">Pts <span class="sort-arrow"></span></th>
+<th data-col="ppga">Pts/GP <span class="sort-arrow"></span></th>
 <th data-col="ppg">PPG <span class="sort-arrow"></span></th>
 <th data-col="shg">SHG <span class="sort-arrow"></span></th>
 <th data-col="gwg">GWG <span class="sort-arrow"></span></th>
 <th data-col="pim">PIM <span class="sort-arrow"></span></th>
-<th data-col="ptspg">Pts/GP <span class="sort-arrow"></span></th>
 </tr></thead>
 <tbody id="tableBody"></tbody>
 </table>
 </div>
 <script>
-var PLAYERS=[{name:"James Stansbury",team:"Cluster Pucks",tc:"CP",pos:"F",gp:8,g:7,a:7,pts:14,ppg:1,shg:0,gwg:1,pim:4},{name:"Eric Hartmann",team:"Cluster Pucks",tc:"CP",pos:"F",gp:8,g:4,a:6,pts:10,ppg:1,shg:0,gwg:2,pim:2},{name:"Joe Reed",team:"Cluster Pucks",tc:"CP",pos:"F",gp:8,g:4,a:4,pts:8,ppg:0,shg:0,gwg:0,pim:4},{name:"Curt Whitson",team:"Cluster Pucks",tc:"CP",pos:"D",gp:8,g:1,a:6,pts:7,ppg:0,shg:0,gwg:0,pim:2},{name:"Brad Allenbaugh",team:"Cluster Pucks",tc:"CP",pos:"F",gp:8,g:3,a:3,pts:6,ppg:0,shg:0,gwg:0,pim:0},{name:"Robert Lees",team:"Cluster Pucks",tc:"CP",pos:"F",gp:8,g:1,a:4,pts:5,ppg:0,shg:0,gwg:0,pim:0},{name:"Ryan Reed",team:"Cluster Pucks",tc:"CP",pos:"F",gp:7,g:2,a:2,pts:4,ppg:0,shg:0,gwg:0,pim:0},{name:"Blayne Dean",team:"Cluster Pucks",tc:"CP",pos:"F",gp:7,g:2,a:2,pts:4,ppg:0,shg:0,gwg:0,pim:0},{name:"Michael Cipriano",team:"Cluster Pucks",tc:"CP",pos:"F",gp:7,g:1,a:3,pts:4,ppg:0,shg:0,gwg:0,pim:2},{name:"Keith Walters",team:"Cluster Pucks",tc:"CP",pos:"D",gp:8,g:1,a:3,pts:4,ppg:0,shg:0,gwg:0,pim:6},{name:"Matthew Caulfield",team:"Cluster Pucks",tc:"CP",pos:"F",gp:8,g:2,a:1,pts:3,ppg:0,shg:0,gwg:0,pim:0},{name:"William Nelligan",team:"Cluster Pucks",tc:"CP",pos:"D",gp:8,g:1,a:2,pts:3,ppg:0,shg:0,gwg:0,pim:0},{name:"James Giffin",team:"Cluster Pucks",tc:"CP",pos:"F",gp:8,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:2},{name:"Andrew Horton",team:"Cluster Pucks",tc:"CP",pos:"D",gp:6,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:0},{name:"Tom Burt",team:"Cluster Pucks",tc:"CP",pos:"F",gp:5,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Ben Hockstra",team:"Cluster Pucks",tc:"CP",pos:"D",gp:7,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:2},{name:"Richard Kramer",team:"Cluster Pucks",tc:"CP",pos:"G",gp:7,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Chad Stotts",team:"Cluster Pucks",tc:"CP",pos:"F",gp:2,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Ryan Gipe",team:"Dark Sabers",tc:"DS",pos:"F",gp:10,g:12,a:13,pts:25,ppg:0,shg:0,gwg:2,pim:0},{name:"Kody Waltrip",team:"Dark Sabers",tc:"DS",pos:"F",gp:10,g:10,a:10,pts:20,ppg:0,shg:0,gwg:2,pim:2},{name:"Matt Barnhart",team:"Dark Sabers",tc:"DS",pos:"F",gp:10,g:5,a:9,pts:14,ppg:0,shg:0,gwg:2,pim:0},{name:"Chris Scott",team:"Dark Sabers",tc:"DS",pos:"F",gp:10,g:5,a:8,pts:13,ppg:0,shg:0,gwg:1,pim:0},{name:"Joshua Guthrie",team:"Dark Sabers",tc:"DS",pos:"F",gp:10,g:5,a:6,pts:11,ppg:0,shg:0,gwg:1,pim:2},{name:"James Keller",team:"Dark Sabers",tc:"DS",pos:"F",gp:10,g:3,a:7,pts:10,ppg:0,shg:0,gwg:0,pim:0},{name:"Ryan Kaler",team:"Dark Sabers",tc:"DS",pos:"D",gp:10,g:3,a:5,pts:8,ppg:0,shg:0,gwg:0,pim:2},{name:"Jared Duttry",team:"Dark Sabers",tc:"DS",pos:"D",gp:10,g:2,a:5,pts:7,ppg:0,shg:0,gwg:0,pim:4},{name:"Tyler Hoffman",team:"Dark Sabers",tc:"DS",pos:"D",gp:10,g:1,a:6,pts:7,ppg:0,shg:0,gwg:0,pim:0},{name:"Matt Hause",team:"Dark Sabers",tc:"DS",pos:"F",gp:8,g:3,a:2,pts:5,ppg:0,shg:0,gwg:0,pim:0},{name:"Alex Malishchak",team:"Dark Sabers",tc:"DS",pos:"D",gp:10,g:2,a:2,pts:4,ppg:0,shg:0,gwg:0,pim:0},{name:"John Diaz",team:"Dark Sabers",tc:"DS",pos:"F",gp:4,g:2,a:1,pts:3,ppg:0,shg:0,gwg:0,pim:0},{name:"Taylor Poe",team:"Dark Sabers",tc:"DS",pos:"F",gp:9,g:1,a:2,pts:3,ppg:0,shg:0,gwg:0,pim:0},{name:"Steve Waltrip",team:"Dark Sabers",tc:"DS",pos:"F",gp:4,g:2,a:0,pts:2,ppg:0,shg:0,gwg:0,pim:0},{name:"Thomas Zelanis",team:"Dark Sabers",tc:"DS",pos:"D",gp:10,g:0,a:2,pts:2,ppg:0,shg:0,gwg:0,pim:2},{name:"Tyler Umberger",team:"Dark Sabers",tc:"DS",pos:"D",gp:7,g:0,a:2,pts:2,ppg:0,shg:0,gwg:0,pim:0},{name:"David Thomas",team:"Dark Sabers",tc:"DS",pos:"F",gp:5,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:2},{name:"Jeff Korenyi-Both",team:"Dark Sabers",tc:"DS",pos:"F",gp:5,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:0},{name:"Ryan Knaub",team:"Dark Sabers",tc:"DS",pos:"F",gp:1,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:0},{name:"Brent Bailey",team:"Dark Sabers",tc:"DS",pos:"G",gp:9,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Eric Miller",team:"Dark Sabers",tc:"DS",pos:"F",gp:4,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Tim Engle",team:"Dark Sabers",tc:"DS",pos:"F",gp:5,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Justin Walls",team:"Dark Sabers",tc:"DS",pos:"F",gp:3,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:2},{name:"Luke Barley",team:"Dark Sabers",tc:"DS",pos:"D",gp:1,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Sean Payne",team:"Dark Sabers",tc:"DS",pos:"F",gp:1,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Patrick Lees",team:"Future Considerations",tc:"FC",pos:"F",gp:9,g:8,a:9,pts:17,ppg:0,shg:0,gwg:2,pim:4},{name:"Wade Yannetti",team:"Future Considerations",tc:"FC",pos:"F",gp:9,g:8,a:7,pts:15,ppg:0,shg:0,gwg:3,pim:8},{name:"Rob Cramer",team:"Future Considerations",tc:"FC",pos:"F",gp:9,g:4,a:10,pts:14,ppg:0,shg:0,gwg:0,pim:4},{name:"Craig Krout",team:"Future Considerations",tc:"FC",pos:"F",gp:9,g:6,a:5,pts:11,ppg:0,shg:0,gwg:0,pim:2},{name:"Kevin Sullivan",team:"Future Considerations",tc:"FC",pos:"F",gp:9,g:5,a:5,pts:10,ppg:0,shg:0,gwg:1,pim:4},{name:"Jeff Snyder",team:"Future Considerations",tc:"FC",pos:"D",gp:9,g:2,a:8,pts:10,ppg:0,shg:0,gwg:0,pim:0},{name:"Mike Garvey",team:"Future Considerations",tc:"FC",pos:"F",gp:9,g:3,a:5,pts:8,ppg:0,shg:0,gwg:1,pim:0},{name:"Mark Snyder",team:"Future Considerations",tc:"FC",pos:"F",gp:9,g:3,a:4,pts:7,ppg:0,shg:0,gwg:0,pim:0},{name:"Brett Bream",team:"Future Considerations",tc:"FC",pos:"D",gp:9,g:2,a:5,pts:7,ppg:0,shg:0,gwg:1,pim:0},{name:"David Lees",team:"Future Considerations",tc:"FC",pos:"F",gp:8,g:3,a:3,pts:6,ppg:0,shg:0,gwg:0,pim:2},{name:"Bryan Farley",team:"Future Considerations",tc:"FC",pos:"D",gp:9,g:1,a:4,pts:5,ppg:0,shg:0,gwg:0,pim:2},{name:"Tony Wilt",team:"Future Considerations",tc:"FC",pos:"D",gp:8,g:0,a:5,pts:5,ppg:0,shg:0,gwg:0,pim:0},{name:"Brad Miller",team:"Future Considerations",tc:"FC",pos:"D",gp:8,g:2,a:2,pts:4,ppg:0,shg:0,gwg:0,pim:2},{name:"Wil Jones",team:"Future Considerations",tc:"FC",pos:"D",gp:7,g:1,a:2,pts:3,ppg:0,shg:0,gwg:0,pim:0},{name:"Phil Fox",team:"Future Considerations",tc:"FC",pos:"F",gp:7,g:1,a:1,pts:2,ppg:0,shg:0,gwg:0,pim:0},{name:"Chad Fisher",team:"Future Considerations",tc:"FC",pos:"D",gp:6,g:0,a:2,pts:2,ppg:0,shg:0,gwg:0,pim:0},{name:"Rich Emig",team:"Future Considerations",tc:"FC",pos:"F",gp:5,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:0},{name:"Jeff Frantz",team:"Future Considerations",tc:"FC",pos:"F",gp:3,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:0},{name:"Bill Lees",team:"Future Considerations",tc:"FC",pos:"F",gp:4,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:0},{name:"Ricky Martin",team:"Future Considerations",tc:"FC",pos:"F",gp:2,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Tim Daub",team:"Future Considerations",tc:"FC",pos:"G",gp:9,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Scott Whitmoyer",team:"Future Considerations",tc:"FC",pos:"F",gp:2,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Josh Balmer",team:"Ride the Icing",tc:"RTI",pos:"F",gp:8,g:7,a:7,pts:14,ppg:1,shg:0,gwg:2,pim:0},{name:"Patrick Hall",team:"Ride the Icing",tc:"RTI",pos:"F",gp:8,g:7,a:4,pts:11,ppg:0,shg:0,gwg:2,pim:4},{name:"Dennis Ziegler",team:"Ride the Icing",tc:"RTI",pos:"F",gp:8,g:3,a:6,pts:9,ppg:0,shg:0,gwg:1,pim:0},{name:"Derek Sheaffer",team:"Ride the Icing",tc:"RTI",pos:"F",gp:8,g:2,a:7,pts:9,ppg:0,shg:0,gwg:0,pim:0},{name:"Brad Sheaffer",team:"Ride the Icing",tc:"RTI",pos:"D",gp:8,g:2,a:6,pts:8,ppg:0,shg:0,gwg:0,pim:0},{name:"Matt Gearhart",team:"Ride the Icing",tc:"RTI",pos:"F",gp:7,g:3,a:3,pts:6,ppg:0,shg:0,gwg:0,pim:2},{name:"Curt Ruoss",team:"Ride the Icing",tc:"RTI",pos:"D",gp:8,g:1,a:3,pts:4,ppg:0,shg:0,gwg:0,pim:0},{name:"Steve Kessler",team:"Ride the Icing",tc:"RTI",pos:"F",gp:7,g:1,a:3,pts:4,ppg:0,shg:0,gwg:0,pim:0},{name:"Terry Ruoss",team:"Ride the Icing",tc:"RTI",pos:"F",gp:6,g:1,a:1,pts:2,ppg:0,shg:0,gwg:0,pim:0},{name:"Rob Messinger",team:"Ride the Icing",tc:"RTI",pos:"D",gp:7,g:0,a:2,pts:2,ppg:0,shg:0,gwg:0,pim:2},{name:"Ryan Harman",team:"Ride the Icing",tc:"RTI",pos:"D",gp:7,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:4},{name:"Randy Ruoss",team:"Ride the Icing",tc:"RTI",pos:"F",gp:5,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Scott Hershey",team:"Ride the Icing",tc:"RTI",pos:"G",gp:7,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Corey Snyder",team:"Ride the Icing",tc:"RTI",pos:"F",gp:3,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Bryan Sensenig",team:"Ride the Icing",tc:"RTI",pos:"D",gp:1,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Andrew Paronish",team:"Slackers",tc:"SLK",pos:"F",gp:9,g:8,a:10,pts:18,ppg:0,shg:0,gwg:1,pim:0},{name:"Cory Graby",team:"Slackers",tc:"SLK",pos:"F",gp:9,g:7,a:9,pts:16,ppg:0,shg:0,gwg:2,pim:2},{name:"Mike Weaver",team:"Slackers",tc:"SLK",pos:"F",gp:9,g:5,a:9,pts:14,ppg:0,shg:0,gwg:1,pim:2},{name:"David Achey",team:"Slackers",tc:"SLK",pos:"F",gp:9,g:6,a:7,pts:13,ppg:0,shg:0,gwg:2,pim:4},{name:"Jamie Garman",team:"Slackers",tc:"SLK",pos:"F",gp:9,g:4,a:5,pts:9,ppg:0,shg:0,gwg:0,pim:0},{name:"Tony Paronish",team:"Slackers",tc:"SLK",pos:"D",gp:9,g:2,a:5,pts:7,ppg:0,shg:0,gwg:0,pim:0},{name:"Tim Garman",team:"Slackers",tc:"SLK",pos:"F",gp:9,g:3,a:3,pts:6,ppg:0,shg:0,gwg:0,pim:2},{name:"Breon Spicher",team:"Slackers",tc:"SLK",pos:"F",gp:7,g:2,a:2,pts:4,ppg:0,shg:0,gwg:0,pim:0},{name:"Jonathan Long",team:"Slackers",tc:"SLK",pos:"F",gp:7,g:1,a:3,pts:4,ppg:0,shg:0,gwg:0,pim:0},{name:"Rick Graby",team:"Slackers",tc:"SLK",pos:"D",gp:9,g:1,a:2,pts:3,ppg:0,shg:0,gwg:0,pim:2},{name:"Jay White",team:"Slackers",tc:"SLK",pos:"D",gp:8,g:0,a:2,pts:2,ppg:0,shg:0,gwg:0,pim:0},{name:"John Gehman",team:"Slackers",tc:"SLK",pos:"D",gp:8,g:0,a:2,pts:2,ppg:0,shg:0,gwg:0,pim:2},{name:"Cody Graby",team:"Slackers",tc:"SLK",pos:"F",gp:5,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:0},{name:"Eric Sauder",team:"Slackers",tc:"SLK",pos:"D",gp:7,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:2},{name:"Sean Garman",team:"Slackers",tc:"SLK",pos:"F",gp:6,g:0,a:1,pts:1,ppg:0,shg:0,gwg:0,pim:0},{name:"Ben Farley",team:"Slackers",tc:"SLK",pos:"F",gp:2,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Ethan Smith",team:"Slackers",tc:"SLK",pos:"F",gp:4,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0},{name:"Doug Brenizer",team:"Slackers",tc:"SLK",pos:"G",gp:9,g:0,a:0,pts:0,ppg:0,shg:0,gwg:0,pim:0}];
+var PLAYERS=[
+{name:"Brandon Smith",team:"Cluster Pucks",tc:"CP",gp:8,g:3,a:3,pts:6,ppga:0.8,pim:2,ppg:1,shg:0,gwg:0},
+{name:"Tim Brooks",team:"Cluster Pucks",tc:"CP",gp:5,g:4,a:0,pts:4,ppga:0.8,pim:8,ppg:0,shg:0,gwg:0},
+{name:"Connor Davis",team:"Cluster Pucks",tc:"CP",gp:7,g:2,a:2,pts:4,ppga:0.6,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Scott Pounds",team:"Cluster Pucks",tc:"CP",gp:4,g:2,a:0,pts:2,ppga:0.5,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Lindsay Fisk",team:"Cluster Pucks",tc:"CP",gp:3,g:1,a:1,pts:2,ppga:0.7,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Joe Gotzler",team:"Cluster Pucks",tc:"CP",gp:5,g:1,a:1,pts:2,ppga:0.4,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Brian Norton",team:"Cluster Pucks",tc:"CP",gp:8,g:1,a:1,pts:2,ppga:0.3,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Mike Hidalgo",team:"Cluster Pucks",tc:"CP",gp:6,g:1,a:0,pts:1,ppga:0.2,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Michael Braden",team:"Cluster Pucks",tc:"CP",gp:7,g:1,a:0,pts:1,ppga:0.1,pim:2,ppg:1,shg:0,gwg:0},
+{name:"Zach Youngs",team:"Cluster Pucks",tc:"CP",gp:0,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Katie Kennedy",team:"Cluster Pucks",tc:"CP",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Nadine Youngs",team:"Cluster Pucks",tc:"CP",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Paul Godfrey",team:"Cluster Pucks",tc:"CP",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Jared Marsh",team:"Cluster Pucks",tc:"CP",gp:2,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Dorian Golestan",team:"Cluster Pucks",tc:"CP",gp:3,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Trisha Herridge",team:"Cluster Pucks",tc:"CP",gp:3,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Stephen Griffin",team:"Cluster Pucks",tc:"CP",gp:5,g:0,a:0,pts:0,ppga:0.0,pim:6,ppg:0,shg:0,gwg:0},
+{name:"Andrew Davis",team:"Cluster Pucks",tc:"CP",gp:7,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"James Stansbury",team:"Dark Sabers",tc:"DS",gp:7,g:10,a:4,pts:14,ppga:2.0,pim:2,ppg:0,shg:0,gwg:1},
+{name:"Aleksandr Kletsov",team:"Dark Sabers",tc:"DS",gp:8,g:8,a:2,pts:10,ppga:1.3,pim:0,ppg:0,shg:0,gwg:2},
+{name:"Andrew Macpherson",team:"Dark Sabers",tc:"DS",gp:6,g:7,a:2,pts:9,ppga:1.5,pim:11,ppg:0,shg:1,gwg:2},
+{name:"Trent Zabrocki",team:"Dark Sabers",tc:"DS",gp:6,g:5,a:4,pts:9,ppga:1.5,pim:6,ppg:0,shg:0,gwg:0},
+{name:"Billy Wagner",team:"Dark Sabers",tc:"DS",gp:8,g:2,a:7,pts:9,ppga:1.1,pim:6,ppg:0,shg:0,gwg:0},
+{name:"Andreas Reueles",team:"Dark Sabers",tc:"DS",gp:5,g:5,a:2,pts:7,ppga:1.4,pim:8,ppg:0,shg:0,gwg:0},
+{name:"Thomas Sands",team:"Dark Sabers",tc:"DS",gp:6,g:4,a:3,pts:7,ppga:1.2,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Robert Harrison",team:"Dark Sabers",tc:"DS",gp:9,g:2,a:5,pts:7,ppga:0.8,pim:4,ppg:0,shg:0,gwg:2},
+{name:"Andrew Sullivan",team:"Dark Sabers",tc:"DS",gp:6,g:2,a:3,pts:5,ppga:0.8,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Codey Levesque",team:"Dark Sabers",tc:"DS",gp:5,g:3,a:1,pts:4,ppga:0.8,pim:0,ppg:1,shg:0,gwg:0},
+{name:"Jaden Sano",team:"Dark Sabers",tc:"DS",gp:4,g:2,a:1,pts:3,ppga:0.8,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Alex Pashign",team:"Dark Sabers",tc:"DS",gp:1,g:2,a:0,pts:2,ppga:2.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Vincent Tiscareno",team:"Dark Sabers",tc:"DS",gp:5,g:2,a:0,pts:2,ppga:0.4,pim:0,ppg:0,shg:0,gwg:1},
+{name:"Brian Robertson",team:"Dark Sabers",tc:"DS",gp:6,g:1,a:1,pts:2,ppga:0.3,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Anthony Garcia",team:"Dark Sabers",tc:"DS",gp:6,g:1,a:0,pts:1,ppga:0.2,pim:4,ppg:0,shg:0,gwg:0},
+{name:"Chris Stansbury",team:"Dark Sabers",tc:"DS",gp:1,g:0,a:1,pts:1,ppga:1.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Scott Gregowske",team:"Dark Sabers",tc:"DS",gp:6,g:0,a:1,pts:1,ppga:0.2,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Cory Flores",team:"Dark Sabers",tc:"DS",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Jonathan Portillo",team:"Dark Sabers",tc:"DS",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Juston Berks",team:"Dark Sabers",tc:"DS",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Matt Calder",team:"Dark Sabers",tc:"DS",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Mitch Vega",team:"Dark Sabers",tc:"DS",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Pavel Weretia",team:"Dark Sabers",tc:"DS",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Sam Jones",team:"Dark Sabers",tc:"DS",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Anthony Sanchez",team:"Dark Sabers",tc:"DS",gp:2,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Corey Schneider",team:"Dark Sabers",tc:"DS",gp:2,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"William Manson",team:"Dark Sabers",tc:"DS",gp:2,g:0,a:0,pts:0,ppga:0.0,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Riley Farfel",team:"Dark Sabers",tc:"DS",gp:3,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Josh Carpenter",team:"Future Considerations",tc:"FC",gp:6,g:8,a:2,pts:10,ppga:1.7,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Matthew Eller",team:"Future Considerations",tc:"FC",gp:8,g:6,a:3,pts:9,ppga:1.1,pim:2,ppg:0,shg:0,gwg:3},
+{name:"Scott Beeler",team:"Future Considerations",tc:"FC",gp:6,g:2,a:6,pts:8,ppga:1.3,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Ismael Garcia",team:"Future Considerations",tc:"FC",gp:6,g:2,a:4,pts:6,ppga:1.0,pim:0,ppg:0,shg:0,gwg:1},
+{name:"Doug Luther",team:"Future Considerations",tc:"FC",gp:4,g:2,a:3,pts:5,ppga:1.3,pim:0,ppg:0,shg:0,gwg:1},
+{name:"Wesley Ott",team:"Future Considerations",tc:"FC",gp:6,g:1,a:2,pts:3,ppga:0.5,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Adam Mings",team:"Future Considerations",tc:"FC",gp:6,g:2,a:0,pts:2,ppga:0.3,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Alvin Do",team:"Future Considerations",tc:"FC",gp:2,g:1,a:1,pts:2,ppga:1.0,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Daniel Myers",team:"Future Considerations",tc:"FC",gp:5,g:1,a:1,pts:2,ppga:0.4,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Edgar Mendoza",team:"Future Considerations",tc:"FC",gp:2,g:1,a:0,pts:1,ppga:0.5,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Michael Twitchell",team:"Future Considerations",tc:"FC",gp:5,g:1,a:0,pts:1,ppga:0.2,pim:8,ppg:0,shg:0,gwg:0},
+{name:"Michael Schroeder",team:"Future Considerations",tc:"FC",gp:5,g:1,a:0,pts:1,ppga:0.2,pim:4,ppg:0,shg:0,gwg:0},
+{name:"Murray Clements",team:"Future Considerations",tc:"FC",gp:6,g:1,a:0,pts:1,ppga:0.2,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Austin Williams",team:"Future Considerations",tc:"FC",gp:0,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Wyatt Paterson",team:"Future Considerations",tc:"FC",gp:0,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Andrew Demofonte",team:"Future Considerations",tc:"FC",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Brenda Moreno",team:"Future Considerations",tc:"FC",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Josh Ellis",team:"Future Considerations",tc:"FC",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Phillip Gurvle",team:"Future Considerations",tc:"FC",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Ryan Laferrara",team:"Future Considerations",tc:"FC",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"David Meyers",team:"Future Considerations",tc:"FC",gp:3,g:0,a:0,pts:0,ppga:0.0,pim:2,ppg:0,shg:0,gwg:0},
+{name:"David Myers",team:"Future Considerations",tc:"FC",gp:3,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Cooper Hasselbrink",team:"Future Considerations",tc:"FC",gp:5,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Tyler Bartlett",team:"Ride the Icing",tc:"RTI",gp:7,g:8,a:0,pts:8,ppga:1.1,pim:0,ppg:1,shg:0,gwg:0},
+{name:"Johnathan Valdez",team:"Ride the Icing",tc:"RTI",gp:7,g:4,a:1,pts:5,ppga:0.7,pim:0,ppg:0,shg:0,gwg:1},
+{name:"Brian Lagestee",team:"Ride the Icing",tc:"RTI",gp:4,g:1,a:4,pts:5,ppga:1.3,pim:0,ppg:0,shg:0,gwg:1},
+{name:"Scott Branter",team:"Ride the Icing",tc:"RTI",gp:6,g:1,a:2,pts:3,ppga:0.5,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Gilbert Yribe",team:"Ride the Icing",tc:"RTI",gp:6,g:2,a:0,pts:2,ppga:0.3,pim:0,ppg:0,shg:0,gwg:1},
+{name:"Jack Linton",team:"Ride the Icing",tc:"RTI",gp:5,g:1,a:1,pts:2,ppga:0.4,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Andrew Galbreath",team:"Ride the Icing",tc:"RTI",gp:1,g:0,a:2,pts:2,ppga:2.0,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Josh Brantner",team:"Ride the Icing",tc:"RTI",gp:4,g:1,a:0,pts:1,ppga:0.3,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Christian Brantner",team:"Ride the Icing",tc:"RTI",gp:1,g:0,a:1,pts:1,ppga:1.0,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Brian Kucera",team:"Ride the Icing",tc:"RTI",gp:2,g:0,a:1,pts:1,ppga:0.5,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Greg Wilternk",team:"Ride the Icing",tc:"RTI",gp:4,g:0,a:1,pts:1,ppga:0.3,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Neil Crisostomo",team:"Ride the Icing",tc:"RTI",gp:0,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Skyler Lydic",team:"Ride the Icing",tc:"RTI",gp:0,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Alex Chouliak",team:"Ride the Icing",tc:"RTI",gp:2,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Will Lambert",team:"Ride the Icing",tc:"RTI",gp:7,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Tanner Padian",team:"Slackers",tc:"SLK",gp:4,g:3,a:1,pts:4,ppga:1.0,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Xavier Lavelle",team:"Slackers",tc:"SLK",gp:4,g:3,a:1,pts:4,ppga:1.0,pim:0,ppg:0,shg:0,gwg:1},
+{name:"Steven Calhoun",team:"Slackers",tc:"SLK",gp:7,g:2,a:2,pts:4,ppga:0.6,pim:6,ppg:0,shg:0,gwg:0},
+{name:"Pj Lachman",team:"Slackers",tc:"SLK",gp:6,g:1,a:2,pts:3,ppga:0.5,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Mike Cherry",team:"Slackers",tc:"SLK",gp:4,g:0,a:3,pts:3,ppga:0.8,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Mike Palumbo",team:"Slackers",tc:"SLK",gp:4,g:2,a:0,pts:2,ppga:0.5,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Mitchell Giese",team:"Slackers",tc:"SLK",gp:6,g:2,a:0,pts:2,ppga:0.3,pim:9,ppg:0,shg:0,gwg:0},
+{name:"Jason Morell",team:"Slackers",tc:"SLK",gp:4,g:1,a:1,pts:2,ppga:0.5,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Cole Calhoun",team:"Slackers",tc:"SLK",gp:5,g:1,a:1,pts:2,ppga:0.4,pim:4,ppg:0,shg:0,gwg:0},
+{name:"Lina Kaneshiro",team:"Slackers",tc:"SLK",gp:6,g:0,a:2,pts:2,ppga:0.3,pim:2,ppg:0,shg:0,gwg:0},
+{name:"James Deno",team:"Slackers",tc:"SLK",gp:4,g:0,a:1,pts:1,ppga:0.3,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Mikey Seitis",team:"Slackers",tc:"SLK",gp:4,g:0,a:1,pts:1,ppga:0.3,pim:2,ppg:0,shg:0,gwg:0},
+{name:"Denise Calhoun",team:"Slackers",tc:"SLK",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Juan Ortiz",team:"Slackers",tc:"SLK",gp:1,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Jillian Thomas",team:"Slackers",tc:"SLK",gp:2,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Tom Padian",team:"Slackers",tc:"SLK",gp:2,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Adam Williams",team:"Slackers",tc:"SLK",gp:4,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0},
+{name:"Jessica Lachman",team:"Slackers",tc:"SLK",gp:4,g:0,a:0,pts:0,ppga:0.0,pim:0,ppg:0,shg:0,gwg:0}
+];
+
 var sortCol='pts',sortDir=-1;
-function getVal(p,col){if(col==='ptspg')return p.gp>0?p.pts/p.gp:0;if(col==='rank')return p.pts;return p[col]!==undefined?p[col]:0;}
-function renderTable(){var tf=document.getElementById('teamFilter').value,pf=document.getElementById('posFilter').value,filtered=PLAYERS.filter(function(p){if(tf!=='ALL'&&p.team!==tf)return false;if(pf!=='ALL'){if(pf==='F'&&p.pos!=='F')return false;if(pf==='D'&&p.pos!=='D')return false;if(pf==='G'&&p.pos!=='G')return false;}return true;});filtered.sort(function(a,b){var av=getVal(a,sortCol),bv=getVal(b,sortCol);if(typeof av==='string')return sortDir===1?av.localeCompare(bv):bv.localeCompare(av);return sortDir===1?av-bv:bv-av;});document.getElementById('tableBody').innerHTML=filtered.map(function(p,i){var rank=i+1,rc=rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-other',ptspg=p.gp>0?(p.pts/p.gp).toFixed(2):'0.00';return'<tr><td><span class="rank-badge '+rc+'">'+rank+'</span></td><td class="name">'+p.name+'</td><td class="team"><span class="team-badge team-'+p.tc+'">'+p.team+'</span></td><td class="pos">'+p.pos+'</td><td>'+p.gp+'</td><td>'+p.g+'</td><td>'+p.a+'</td><td><strong>'+p.pts+'</strong></td><td>'+p.ppg+'</td><td>'+p.shg+'</td><td>'+p.gwg+'</td><td>'+p.pim+'</td><td>'+ptspg+'</td></tr>';}).join('');document.getElementById('statCount').textContent=filtered.length+' players';document.querySelectorAll('thead th').forEach(function(th){var col=th.dataset.col,arrow=th.querySelector('.sort-arrow');th.classList.toggle('sorted',col===sortCol);if(arrow)arrow.textContent=col===sortCol?(sortDir===1?' up':' down'):'';});}
+function getVal(p,col){if(col==='rank')return p.pts;return p[col]!==undefined?p[col]:0;}
+function renderTable(){
+var tf=document.getElementById('teamFilter').value;
+var filtered=PLAYERS.filter(function(p){if(tf!=='ALL'&&p.team!==tf)return false;return true;});
+filtered.sort(function(a,b){var av=getVal(a,sortCol),bv=getVal(b,sortCol);if(typeof av==='string')return sortDir===1?av.localeCompare(bv):bv.localeCompare(av);return sortDir===1?av-bv:bv-av;});
+document.getElementById('tableBody').innerHTML=filtered.map(function(p,i){
+var rank=i+1,rc=rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-other';
+return'<tr><td><span class="rank-badge '+rc+'">'+rank+'</span></td><td class="name">'+p.name+'</td><td class="team"><span class="team-badge team-'+p.tc+'">'+p.team+'</span></td><td>'+p.gp+'</td><td>'+p.g+'</td><td>'+p.a+'</td><td><strong>'+p.pts+'</strong></td><td>'+p.ppga.toFixed(2)+'</td><td>'+p.ppg+'</td><td>'+p.shg+'</td><td>'+p.gwg+'</td><td>'+p.pim+'</td></tr>';
+}).join('');
+document.getElementById('statCount').textContent=filtered.length+' players';
+document.querySelectorAll('thead th').forEach(function(th){var col=th.dataset.col,arrow=th.querySelector('.sort-arrow');th.classList.toggle('sorted',col===sortCol);if(arrow)arrow.textContent=col===sortCol?(sortDir===1?' ▲':' ▼'):'';});
+}
 document.querySelectorAll('thead th[data-col]').forEach(function(th){th.addEventListener('click',function(){var col=th.dataset.col;if(col==='rank')return;if(sortCol===col){sortDir*=-1;}else{sortCol=col;sortDir=-1;}renderTable();});});
 document.getElementById('teamFilter').addEventListener('change',renderTable);
-document.getElementById('posFilter').addEventListener('change',renderTable);
 renderTable();
 </script>
 </body>
